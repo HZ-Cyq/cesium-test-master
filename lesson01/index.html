@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Hello World!</title>
+  <script src="../Build/Cesium/Cesium.js"></script>
+  <style>
+      @import url(../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body>
+  <div id="credit"></div>
+      <div id="cesiumContainer">
+        <div id="cesiumxin" style="position:fixed;left:0;z-index:99"><a href="http://cesium.xin" style="color:aliceblue;text-decoration:none">cesium中文网 http://cesium.xin </a></div>
+    </div>
+  <script>
+    var viewer = new Cesium.Viewer('cesiumContainer',{
+        imageryProvider: new Cesium.SingleTileImageryProvider({
+            url: '../img/worldimage.jpg'
+        }),
+        geocoder:false,
+        homeButton:false,
+        sceneModePicker:false,
+        baseLayerPicker:false,
+        navigationHelpButton:false,
+        animation:false,
+        creditContainer:"credit",
+        timeline:false,
+        fullscreenButton:false,
+        vrButton:false,
+        // skyBox : new Cesium.SkyBox({
+        //     sources : {
+        //     positiveX : 'stars/TychoSkymapII.t3_08192x04096_80_px.jpg',
+        //     negativeX : 'stars/TychoSkymapII.t3_08192x04096_80_mx.jpg',
+        //     positiveY : 'stars/TychoSkymapII.t3_08192x04096_80_py.jpg',
+        //     negativeY : 'stars/TychoSkymapII.t3_08192x04096_80_my.jpg',
+        //     positiveZ : 'stars/TychoSkymapII.t3_08192x04096_80_pz.jpg',
+        //     negativeZ : 'stars/TychoSkymapII.t3_08192x04096_80_mz.jpg'
+        //     }
+        // })
+    });
+    viewer.scene.debugShowFramesPerSecond = true,
+    testAddAddRemove();
+
+
+  function addLine() {
+    setInterval(() => {  
+      for (let i = 0; i < 1000; i++) {
+        let a = Math.random() * 120;
+        let b = Math.random() * 120;
+        let lineFeature = viewer.entities.add({
+          name: "Red line on terrain",
+          polyline: {
+            positions: Cesium.Cartesian3.fromDegreesArray([a, 35, b, 35]),
+            width: 5,
+            material: Cesium.Color.RED,
+            clampToGround: true,
+          },
+      });
+    }  
+    }, 1000);
+    console.log("hello world");
+  }
+  function addLine2() {
+    // 创建一个 PrimitiveCollection
+    const primitiveCollection = new Cesium.PrimitiveCollection();
+    // 定义线的顶点
+    const positions = Cesium.Cartesian3.fromDegreesArray([
+      0, 39.57,
+      89, 38.53
+    ]);
+    // 创建几何实例
+    const lineGeometry = new Cesium.GeometryInstance({
+      geometry: new Cesium.SimplePolylineGeometry({
+        positions: positions,
+        width: 5 // 线宽度
+      })
+    });
+    // 创建材质外观
+    const lineAppearance = new Cesium.PolylineMaterialAppearance({
+      material: Cesium.Material.fromType('Color', {
+        color: Cesium.Color.RED
+      })
+    });
+    // 创建线条 Primitive
+    const linePrimitive = new Cesium.Primitive({
+      geometryInstances: lineGeometry,
+      appearance: lineAppearance
+    });
+    viewer.scene.primitives.add(primitiveCollection);
+    // 将线条 Primitive 添加到 PrimitiveCollection 中
+    primitiveCollection.add(linePrimitive);
+    // 将 PrimitiveCollection 添加到场景的 primitives 中
+  }
+  // 添加后，再删除，再添加
+    function testAddAddRemove() {
+      // 初始化 Cesium Viewer
+      const viewer = new Cesium.Viewer('cesiumContainer');
+
+      // 定义线的顶点（经纬度）
+      const positions = Cesium.Cartesian3.fromDegreesArray([
+        0, 39.57,  // 起点
+        89, 38.53  // 终点
+      ]);
+
+      // 创建几何实例
+      const lineGeometry = new Cesium.GeometryInstance({
+        geometry: new Cesium.SimplePolylineGeometry({
+          positions: positions,
+          width: 5 // 线宽度
+        })
+      });
+
+      // 创建材质外观
+      const lineAppearance = new Cesium.PolylineMaterialAppearance({
+        material: Cesium.Material.fromType('Color', {
+          color: Cesium.Color.RED
+        })
+      });
+
+      // 创建线条 Primitive，并确保 geometryInstancesRelease 为 false
+      const linePrimitive = new Cesium.Primitive({
+        geometryInstances: lineGeometry,
+        appearance: lineAppearance,
+        geometryInstancesRelease: false // 防止几何体实例资源被释放
+      });
+
+      // 添加到场景中
+      viewer.scene.primitives.add(linePrimitive);
+
+      // 5秒后删除 primitive
+      // setTimeout(() => {
+      //   console.log("删除primitive");
+      //   viewer.scene.primitives.remove(linePrimitive);
+      //   viewer.scene.requestRender(); // 强制渲染场景
+      // }, 5000);
+
+      // 10秒后重新添加 primitive
+      // setTimeout(() => {
+      //   console.log("添加primitive");
+      //   viewer.scene.primitives.add(linePrimitive);
+      //   viewer.scene.requestRender(); // 强制渲染场景
+      // }, 10000);
+  }
+  </script>
+</body>
+</html>
