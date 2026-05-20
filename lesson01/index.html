@@ -1,107 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <!-- Use correct character set. -->
   <meta charset="utf-8">
   <!-- Tell IE to use the latest, best version. -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
   <title>Hello World!</title>
   <script src="../Build/Cesium/Cesium.js"></script>
   <style>
-      @import url(../Build/Cesium/Widgets/widgets.css);
-      html, body, #cesiumContainer {
-          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
-      }
+    @import url(../Build/Cesium/Widgets/widgets.css);
+
+    html,
+    body,
+    #cesiumContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
   </style>
 </head>
+
 <body>
   <div id="credit"></div>
-      <div id="cesiumContainer">
-        <div id="cesiumxin" style="position:fixed;left:0;z-index:99"><a href="http://cesium.xin" style="color:aliceblue;text-decoration:none">cesium中文网 http://cesium.xin </a></div>
-    </div>
+  <div id="cesiumContainer">
+    <div id="cesiumxin" style="position:fixed;left:0;z-index:99"><a href="http://cesium.xin"
+        style="color:aliceblue;text-decoration:none">cesium中文网 http://cesium.xin </a></div>
+  </div>
   <script>
-    var viewer = new Cesium.Viewer('cesiumContainer',{
-        imageryProvider: new Cesium.SingleTileImageryProvider({
-            url: '../img/worldimage.jpg'
-        }),
-        geocoder:false,
-        homeButton:false,
-        sceneModePicker:false,
-        baseLayerPicker:false,
-        navigationHelpButton:false,
-        animation:false,
-        creditContainer:"credit",
-        timeline:false,
-        fullscreenButton:false,
-        vrButton:false,
-        // skyBox : new Cesium.SkyBox({
-        //     sources : {
-        //     positiveX : 'stars/TychoSkymapII.t3_08192x04096_80_px.jpg',
-        //     negativeX : 'stars/TychoSkymapII.t3_08192x04096_80_mx.jpg',
-        //     positiveY : 'stars/TychoSkymapII.t3_08192x04096_80_py.jpg',
-        //     negativeY : 'stars/TychoSkymapII.t3_08192x04096_80_my.jpg',
-        //     positiveZ : 'stars/TychoSkymapII.t3_08192x04096_80_pz.jpg',
-        //     negativeZ : 'stars/TychoSkymapII.t3_08192x04096_80_mz.jpg'
-        //     }
-        // })
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+      imageryProvider: new Cesium.SingleTileImageryProvider({
+        url: '../img/worldimage.jpg'
+      }),
+      geocoder: false,
+      homeButton: false,
+      sceneModePicker: false,
+      baseLayerPicker: false,
+      navigationHelpButton: false,
+      animation: false,
+      creditContainer: "credit",
+      timeline: false,
+      fullscreenButton: false,
+      vrButton: false,
+      // skyBox : new Cesium.SkyBox({
+      //     sources : {
+      //     positiveX : 'stars/TychoSkymapII.t3_08192x04096_80_px.jpg',
+      //     negativeX : 'stars/TychoSkymapII.t3_08192x04096_80_mx.jpg',
+      //     positiveY : 'stars/TychoSkymapII.t3_08192x04096_80_py.jpg',
+      //     negativeY : 'stars/TychoSkymapII.t3_08192x04096_80_my.jpg',
+      //     positiveZ : 'stars/TychoSkymapII.t3_08192x04096_80_pz.jpg',
+      //     negativeZ : 'stars/TychoSkymapII.t3_08192x04096_80_mz.jpg'
+      //     }
+      // })
     });
     viewer.scene.debugShowFramesPerSecond = true,
-    testAddAddRemove();
+      testAddAddRemove();
+    // const hpr = disEulerToHPRNorthAligned2(1.432, -0.608, 3.14, -97.949, 55.160);
+    const hpr = disEulerToHPRNorthAligned2(2.4398, -0.966, 3.0096, -76.544, 39.73, 1000000);
+    console.log("heading:", hpr.heading.toFixed(2), "°"); // 0°
+    console.log("pitch:", hpr.pitch.toFixed(2), "°");     // 0°
+    console.log("roll:", hpr.roll.toFixed(2), "°");       // ~0°
+
+    const v = new Cesium.Cartesian3(1, 2, 1);
+    let normalize = Cesium.Cartesian3.normalize(v, v);
+    // console.log("v:");
+    // console.log(v);
+    console.log("normalize:");
+    console.log(normalize);
+    let magnitudeSquared = Cesium.Cartesian3.magnitudeSquared(normalize);
+    console.log("magitudeSquares:", magnitudeSquared);
 
 
-  function addLine() {
-    setInterval(() => {  
-      for (let i = 0; i < 1000; i++) {
-        let a = Math.random() * 120;
-        let b = Math.random() * 120;
-        let lineFeature = viewer.entities.add({
-          name: "Red line on terrain",
-          polyline: {
-            positions: Cesium.Cartesian3.fromDegreesArray([a, 35, b, 35]),
-            width: 5,
-            material: Cesium.Color.RED,
-            clampToGround: true,
-          },
+    let forward = new Cesium.Cartesian3(0, 2, 0);
+    let up = new Cesium.Cartesian3(0, 0, 2);
+    const right = new Cesium.Cartesian3();
+    Cesium.Cartesian3.cross(forward, up, right);
+    Cesium.Cartesian3.normalize(right, right);
+    console.log("right:");
+    console.log(right);
+
+
+    // console.log(v.x, v.y, v.z);
+
+    // const v = new Cesium.Cartesian3(1, 2, 1);
+    // const before = Cesium.Cartesian3.clone(v);
+
+    // let re = Cesium.Cartesian3.normalize(v, v);
+
+    // console.log("before:", before.x, before.y, before.z);
+    // console.log("after :", v.x, v.y, v.z);
+    // console.log(re);
+
+    /**
+     * DIS Euler (psi, theta, phi) -> 本地 Heading / Pitch / Roll (度数, 0/0/0 表示水平朝北)
+     *
+     * @param {number} psi    DIS yaw   (rad)
+     * @param {number} theta  DIS pitch (rad)
+     * @param {number} phi    DIS roll  (rad)
+     * @param {number} lonDeg 经度 (度)
+     * @param {number} latDeg 纬度 (度)
+     * @param {number} height 高度 (米)
+     * @returns {object} { heading, pitch, roll } 单位: 度, 归一化后
+     */
+    function disEulerToHPRNorthAligned(psi, theta, phi, lonDeg, latDeg, height = 0) {
+      // 1. 经纬度转弧度
+      const lon = Cesium.Math.toRadians(lonDeg);
+      const lat = Cesium.Math.toRadians(latDeg);
+
+      // 2. DIS Euler -> ECEF rotation matrix (Z-Y-X)
+      const Rz = Cesium.Matrix3.fromRotationZ(psi);
+      const Ry = Cesium.Matrix3.fromRotationY(theta);
+      const Rx = Cesium.Matrix3.fromRotationX(phi);
+
+      const Rzy = Cesium.Matrix3.multiply(Rz, Ry, new Cesium.Matrix3());
+      const Recef = Cesium.Matrix3.multiply(Rzy, Rx, new Cesium.Matrix3());
+
+      // 3. 构建本地 ENU 坐标系在 ECEF 下的变换矩阵，使用高度
+      const enuFrame = Cesium.Transforms.eastNorthUpToFixedFrame(
+        Cesium.Cartesian3.fromRadians(lon, lat, height)
+      );
+
+      // 4. 计算 ECEF -> ENU 的旋转矩阵
+      const invEnu = Cesium.Matrix4.inverseTransformation(enuFrame, new Cesium.Matrix4());
+      const ecefToEnuRot = Cesium.Matrix4.getRotation(invEnu, new Cesium.Matrix3());
+
+      // 5. Renu = ENU 下的实体旋转矩阵
+      const Renu = Cesium.Matrix3.multiply(ecefToEnuRot, Recef, new Cesium.Matrix3());
+
+      // 6. 矩阵 -> 四元数
+      const quat = Cesium.Quaternion.fromRotationMatrix(Renu);
+
+      // 7. 四元数 -> HPR
+      let hpr = Cesium.HeadingPitchRoll.fromQuaternion(quat);
+
+      // 8. 对齐模型前向到北方向（北朝向 = heading 0）
+      hpr.heading += Math.PI / 2; // 补偿90°
+      hpr.heading = (hpr.heading + 2 * Math.PI) % (2 * Math.PI);
+
+      // 9. pitch 保持原值
+      let pitch = hpr.pitch;
+
+      // 10. roll 归一化 [-π, π]
+      let roll = hpr.roll;
+      if (roll > Math.PI) roll -= 2 * Math.PI;
+      if (roll < -Math.PI) roll += 2 * Math.PI;
+
+      return {
+        heading: Cesium.Math.toDegrees(hpr.heading),
+        pitch: Cesium.Math.toDegrees(pitch),
+        roll: Cesium.Math.toDegrees(roll)
+      };
+    }
+/**
+ * DIS Euler (psi, theta, phi)
+ * → 本地 ENU Heading / Pitch / Roll
+ *
+ * Heading 定义：
+ *   0° = 北
+ *   顺时针为正
+ *   [0, 360)
+ */
+ function disEulerToHPRNorthAligned2(
+  psi,
+  theta,
+  phi,
+  lonDeg,
+  latDeg,
+  height = 0
+) {
+  /* ---------- 1. DIS Euler → ECEF ---------- */
+  const Rz = Cesium.Matrix3.fromRotationZ(psi);
+  const Ry = Cesium.Matrix3.fromRotationY(theta);
+  const Rx = Cesium.Matrix3.fromRotationX(phi);
+
+  const R_ecef_body = Cesium.Matrix3.multiply(
+    Rz,
+    Cesium.Matrix3.multiply(Ry, Rx, new Cesium.Matrix3()),
+    new Cesium.Matrix3()
+  );
+
+  /* ---------- 2. ECEF → ENU ---------- */
+  const origin = Cesium.Cartesian3.fromDegrees(lonDeg, latDeg, height);
+  const enuToEcef = Cesium.Transforms.eastNorthUpToFixedFrame(origin);
+
+  const R_enu_ecef = Cesium.Matrix3.transpose(
+    Cesium.Matrix4.getRotation(enuToEcef, new Cesium.Matrix3()),
+    new Cesium.Matrix3()
+  );
+
+  const R_enu_body = Cesium.Matrix3.multiply(
+    R_enu_ecef,
+    R_ecef_body,
+    new Cesium.Matrix3()
+  );
+
+  /* ---------- 3. DIS → Cesium 机体系修正 ---------- */
+  const bodyFix = new Cesium.Matrix3(
+     1,  0,  0,
+     0, -1,  0,
+     0,  0, -1
+  );
+
+  const R = Cesium.Matrix3.multiply(
+    R_enu_body,
+    bodyFix,
+    new Cesium.Matrix3()
+  );
+
+  /* ---------- 4. Heading：用前向向量直接算 ---------- */
+  // Cesium 机体前向 = +X
+  const forwardENU = Cesium.Matrix3.multiplyByVector(
+    R,
+    Cesium.Cartesian3.UNIT_X,
+    new Cesium.Cartesian3()
+  );
+
+  // 投影到 EN 平面
+  const east  = forwardENU.x;
+  const north = forwardENU.y;
+
+  // 0° = 北，顺时针为正
+  let headingRad = Math.atan2(east, north);
+  let headingDeg = Cesium.Math.toDegrees(headingRad);
+  headingDeg = (headingDeg % 360 + 360) % 360;
+
+  /* ---------- 5. Pitch / Roll（仍用 Cesium） ---------- */
+  const q = Cesium.Quaternion.fromRotationMatrix(R);
+  const hpr = Cesium.HeadingPitchRoll.fromQuaternion(q);
+
+  let pitchDeg = Cesium.Math.toDegrees(hpr.pitch);
+  let rollDeg  = Cesium.Math.toDegrees(hpr.roll);
+
+  // 消除 ±180° 假象
+  if (Math.abs(Math.abs(rollDeg) - 180) < 1e-6) {
+    rollDeg = 0;
+  }
+
+  return {
+    heading: headingDeg,
+    pitch: pitchDeg,
+    roll: rollDeg
+  };
+}
+
+
+
+    function addLine() {
+      setInterval(() => {
+        for (let i = 0; i < 1000; i++) {
+          let a = Math.random() * 120;
+          let b = Math.random() * 120;
+          let lineFeature = viewer.entities.add({
+            name: "Red line on terrain",
+            polyline: {
+              positions: Cesium.Cartesian3.fromDegreesArray([a, 35, b, 35]),
+              width: 5,
+              material: Cesium.Color.RED,
+              clampToGround: true,
+            },
+          });
+        }
+      }, 1000);
+      console.log("hello world");
+    }
+    function addLine2() {
+      // 创建一个 PrimitiveCollection
+      const primitiveCollection = new Cesium.PrimitiveCollection();
+      // 定义线的顶点
+      const positions = Cesium.Cartesian3.fromDegreesArray([
+        0, 39.57,
+        89, 38.53
+      ]);
+      // 创建几何实例
+      const lineGeometry = new Cesium.GeometryInstance({
+        geometry: new Cesium.SimplePolylineGeometry({
+          positions: positions,
+          width: 5 // 线宽度
+        })
       });
-    }  
-    }, 1000);
-    console.log("hello world");
-  }
-  function addLine2() {
-    // 创建一个 PrimitiveCollection
-    const primitiveCollection = new Cesium.PrimitiveCollection();
-    // 定义线的顶点
-    const positions = Cesium.Cartesian3.fromDegreesArray([
-      0, 39.57,
-      89, 38.53
-    ]);
-    // 创建几何实例
-    const lineGeometry = new Cesium.GeometryInstance({
-      geometry: new Cesium.SimplePolylineGeometry({
-        positions: positions,
-        width: 5 // 线宽度
-      })
-    });
-    // 创建材质外观
-    const lineAppearance = new Cesium.PolylineMaterialAppearance({
-      material: Cesium.Material.fromType('Color', {
-        color: Cesium.Color.RED
-      })
-    });
-    // 创建线条 Primitive
-    const linePrimitive = new Cesium.Primitive({
-      geometryInstances: lineGeometry,
-      appearance: lineAppearance
-    });
-    viewer.scene.primitives.add(primitiveCollection);
-    // 将线条 Primitive 添加到 PrimitiveCollection 中
-    primitiveCollection.add(linePrimitive);
-    // 将 PrimitiveCollection 添加到场景的 primitives 中
-  }
-  // 添加后，再删除，再添加
+      // 创建材质外观
+      const lineAppearance = new Cesium.PolylineMaterialAppearance({
+        material: Cesium.Material.fromType('Color', {
+          color: Cesium.Color.RED
+        })
+      });
+      // 创建线条 Primitive
+      const linePrimitive = new Cesium.Primitive({
+        geometryInstances: lineGeometry,
+        appearance: lineAppearance
+      });
+      viewer.scene.primitives.add(primitiveCollection);
+      // 将线条 Primitive 添加到 PrimitiveCollection 中
+      primitiveCollection.add(linePrimitive);
+      // 将 PrimitiveCollection 添加到场景的 primitives 中
+    }
+    // 添加后，再删除，再添加
     function testAddAddRemove() {
+
       // 初始化 Cesium Viewer
       const viewer = new Cesium.Viewer('cesiumContainer');
 
@@ -149,7 +349,9 @@
       //   viewer.scene.primitives.add(linePrimitive);
       //   viewer.scene.requestRender(); // 强制渲染场景
       // }, 10000);
-  }
+    }
+
   </script>
 </body>
+
 </html>
